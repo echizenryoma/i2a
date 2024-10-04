@@ -350,6 +350,7 @@ function parse_command_and_confirm() {
     esac
 }
 
+[ "$(grep -q "ID=debian" /etc/os-release; echo $?)" -eq 0 ] || fatal '[-] This script only supports Debian systems.'
 [ ${EUID} -eq 0 ] || fatal '[-] This script must be run as root.'
 [ ${UID} -eq 0 ] || fatal '[-] This script must be run as root.'
 
