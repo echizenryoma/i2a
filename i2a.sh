@@ -183,7 +183,7 @@ mkfs.vfat -F32 ${disk}2
 mkfs.btrfs -f -L ArchRoot  ${disk}3
 blockdev --rereadpt ${disk}
 udevadm settle
-mount -o compress-force=zstd ${disk}3 /mnt
+mount -o compress-force=zstd,autodefrag,noatime ${disk}3 /mnt
 
 # download bootstrap
 wget -q -O - "${mirror}/iso/latest/archlinux-bootstrap-${arch}.tar.zst" | zstd -d | tar -xf - --directory=/mnt --strip-components=1
