@@ -256,6 +256,7 @@ chroot /mnt mkdir -p /boot/grub
 chroot /mnt grub-mkconfig -o /boot/grub/grub.cfg
 
 if [ "\$uefi" = "true" ]; then
+	chroot /mnt pacman --disable-sandbox --needed --noconfirm -Su efibootmgr
 	mount --rbind /sys/firmware/efi/efivars /mnt/sys/firmware/efi/efivars
 	chroot /mnt grub-install --target=x86_64-efi --efi-directory=/boot/efi --removable --bootloader-id=GRUB
 	umount /mnt/sys/firmware/efi/efivars
