@@ -258,7 +258,7 @@ chroot /mnt grub-mkconfig -o /boot/grub/grub.cfg
 if [ "\$uefi" = "true" ]; then
 	mount --rbind /sys/firmware/efi/efivars /mnt/sys/firmware/efi/efivars
 	chroot /mnt grub-install --target=x86_64-efi --efi-directory=/boot/efi --removable --bootloader-id=GRUB
-	umount -l /mnt/sys/firmware/efi/efivars
+	umount /mnt/sys/firmware/efi/efivars
 else
 	chroot /mnt grub-install --target=i386-pc ${disk}
 fi
