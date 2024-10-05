@@ -122,7 +122,7 @@ function configure_rootfs_dependencies(){
 	
 	log "[*] Installing dropbear and depends into rootfs..."
 	chroot ${boot} apk update
-	chroot ${boot} apk add bash dropbear arch-install-scripts zstd sgdisk btrfs-progs eudev
+	chroot ${boot} apk add bash dropbear arch-install-scripts zstd sgdisk dosfstools btrfs-progs eudev
 	chroot ${boot} mkdir -p /etc/dropbear
 	chroot ${boot} dropbearkey -t rsa -f /etc/dropbear/dropbear_rsa_host_key
 	chroot ${boot} bash -c 'echo "DROPBEAR_PORT=22" >> /etc/conf.d/dropbear'
@@ -164,7 +164,7 @@ reflector=${reflector}
 
 
 function mid_exit() { echo "[*] Reinstall Error! Force reboot by \"echo b > /proc/sysrq-trigger\". "; exec /bin/sh; }
-exec </dev/tty1 && exec >/dev/tty1 && exec 2>/dev/tty1
+exec </dev/tty0 && exec >/dev/tty0 && exec 2>/dev/tty0
 trap mid_exit EXIT
 
 sysctl -w kernel.sysrq=1 >/dev/null
@@ -186,7 +186,6 @@ ${disk}
 # format disk and mount root
 mkfs.fat -F 32 ${disk}2
 mkfs.btrfs -f -L ArchRoot  ${disk}3
-blockdev --rereadpt ${disk}
 udevadm settle
 mount -o compress-force=zstd,autodefrag,noatime ${disk}3 /mnt
 
