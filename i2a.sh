@@ -152,6 +152,7 @@ function switch_to_rootfs(){
 	
 	cat > ${boot}/init <<EOF
 #!/bin/bash
+export PATH="\$PATH:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
 
 uefi=${uefi}
 disk=${disk}
@@ -162,9 +163,10 @@ password=${password}
 reflector=${reflector}
 
 
-function mid_exit() { echo "[*] Reinstall Error! Force reboot by \"echo b > /proc/sysrq-trigger\". "; reboot -f; }
-exec </dev/tty0 && exec >/dev/tty0 && exec 2>/dev/tty0
+function mid_exit() { echo "[*] Reinstall Error! Force reboot by \"echo b > /proc/sysrq-trigger\". "; exec /bin/sh; }
+exec </dev/tty1 && exec >/dev/tty1 && exec 2>/dev/tty1
 trap mid_exit EXIT
+
 sysctl -w kernel.sysrq=1 >/dev/null
 echo i > /proc/sysrq-trigger
 
