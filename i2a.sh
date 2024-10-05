@@ -162,7 +162,6 @@ password=${password}
 reflector=${reflector}
 
 
-
 function mid_exit() { echo "[*] Reinstall Error! Force reboot by \"echo b > /proc/sysrq-trigger\". "; reboot -f; }
 exec </dev/tty0 && exec >/dev/tty0 && exec 2>/dev/tty0
 trap mid_exit EXIT
@@ -180,7 +179,7 @@ sgdisk -g \
 ${disk}
 
 # Check if the disk is nvme
-[[ $disk == /dev/nvme* ]] && disk="${disk}p"
+[[ \$disk == /dev/nvme* ]] && disk="\${disk}p"
 
 # format disk and mount root
 mkfs.fat -F 32 ${disk}2
