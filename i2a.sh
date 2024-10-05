@@ -171,7 +171,8 @@ echo i > /proc/sysrq-trigger
 
 /usr/sbin/dropbear
 
-sgdisk --align-end \
+sgdisk -g \
+		--align-end \
     --clear \
     --new 0:0:+1M --typecode=0:ef02 --change-name=0:'BIOS boot partition' \
     --new 0:0:+100M --typecode=0:ef00 --change-name=0:'EFI system partition' \
