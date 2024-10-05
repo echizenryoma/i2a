@@ -118,7 +118,7 @@ function configure_rootfs_dependencies(){
 	echo -e "${nameserver}" > ${boot}/etc/resolv.conf
 	
 	log "[*] Loading kernel modules into rootfs..."	
-	apt update && apt install btrfs-progs -y && modprobe btrfs
+	apt update && apt install dosfstools btrfs-progs -y && modprobe btrfs
 	
 	log "[*] Installing dropbear and depends into rootfs..."
 	chroot ${boot} apk update
@@ -163,7 +163,7 @@ reflector=${reflector}
 
 
 
-function mid_exit() { echo "[*] Reinstall Error! Force reboot by \"echo b > /proc/sysrq-trigger\". "; exec /bin/sh; }
+function mid_exit() { echo "[*] Reinstall Error! Force reboot by \"echo b > /proc/sysrq-trigger\". "; reboot -f; }
 exec </dev/tty0 && exec >/dev/tty0 && exec 2>/dev/tty0
 trap mid_exit EXIT
 sysctl -w kernel.sysrq=1 >/dev/null
@@ -179,8 +179,11 @@ sgdisk -g \
     --new 0:0:0 --typecode=0:8304 --change-name=0:'Arch Linux root' \
 ${disk}
 
+# Check if the disk is nvme
+[[ $disk == /dev/nvme* ]] && disk="${disk}p"
+
 # format disk and mount root
-mkfs.vfat -F32 ${disk}2
+mkfs.fat -F 32 ${disk}2
 mkfs.btrfs -f -L ArchRoot  ${disk}3
 blockdev --rereadpt ${disk}
 udevadm settle
