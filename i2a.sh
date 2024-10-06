@@ -20,7 +20,6 @@ reflector=false
 base_packages='grub openssh sudo irqbalance haveged sudo btrfs-progs'
 extra_packages='wget curl vim bash-completion screen'
 mirror='https://mirrors.kernel.org/archlinux'
-mirror='https://cloudflaremirrors.com/archlinux'
 nameserver="nameserver 8.8.8.8\nnameserver 2606:4700:4700::1111"
 uefi=$([ -d /sys/firmware/efi ] && echo true || echo false)
 disk="/dev/$(lsblk -no PKNAME "$(df /boot | grep -Eo '/dev/[a-z0-9]+')")"
