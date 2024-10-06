@@ -160,7 +160,12 @@ waitme=${waitme}
 mirror=${mirror}
 password=${password}
 reflector=${reflector}
-
+interface=${interfaces}
+ip_mac=${ip_mac}
+ip4_gw=${ip4_gw}
+ip6_gw=${ip6_gw}
+ip4_addr=${ip4_addr}
+ip6_addr=${ip6_addr}
 
 function mid_exit() { echo "[*] Reinstall Error! Force reboot by \"echo b > /proc/sysrq-trigger\". "; exec /bin/sh; }
 exec </dev/tty0 && exec >/dev/tty0 && exec 2>/dev/tty0
@@ -168,6 +173,15 @@ trap mid_exit EXIT
 
 sysctl -w kernel.sysrq=1 >/dev/null
 echo i > /proc/sysrq-trigger
+
+# Reset network
+ip addr flush dev ${interface} 2>/dev/null
+ip addr add ${ip4_addr} dev ${interface} 2>/dev/null
+ip route add default via ${ip4_gw} dev ${interface} onlink 2>/dev/null
+ip -6 addr flush dev ${interface} 2>/dev/null
+ip -6 addr add ${ip6_addr} dev ${interface} 2>/dev/null
+ip -6 route add default via ${ip6_gw} dev ${interface} onlink 2>/dev/nul
+ping -c 2 8.8.8.8
 
 /usr/sbin/dropbear
 
