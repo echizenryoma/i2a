@@ -118,7 +118,7 @@ function configure_rootfs_dependencies(){
 	echo -e "${nameserver}" > ${boot}/etc/resolv.conf
 	
 	log "[*] Loading kernel modules into rootfs..."	
-	apt update && apt install dosfstools btrfs-progs -y && modprobe btrfs
+	apt update && apt install dosfstools btrfs-progs -y && modprobe btrfs vfat
 	
 	log "[*] Installing dropbear and depends into rootfs..."
 	chroot ${boot} apk update
@@ -184,17 +184,17 @@ ${disk}
 [[ \$disk == /dev/nvme* ]] && disk="\${disk}p"
 
 # format disk and mount root
-mkfs.fat -F 32 ${disk}2
-mkfs.btrfs -f -L ArchRoot  ${disk}3
+mkfs.vfat -F 32 \${disk}2
+mkfs.btrfs -f -L ArchRoot  \${disk}3
 udevadm settle
-mount -o compress-force=zstd,autodefrag,noatime ${disk}3 /mnt
+mount -o compress-force=zstd,autodefrag,noatime \${disk}3 /mnt
 
 # download bootstrap
 wget -q -O - "${mirror}/iso/latest/archlinux-bootstrap-${arch}.tar.zst" | zstd -d | tar -xf - --directory=/mnt --strip-components=1
 
 # mount more need 
 mkdir -p /mnt/boot/efi
-mount ${disk}2 /mnt/boot/efi
+mount \${disk}2 /mnt/boot/efi
 
 mount -t proc proc /mnt/proc
 mount -t sysfs sys /mnt/sys
