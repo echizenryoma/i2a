@@ -306,7 +306,7 @@ EOF
 
 function print_info(){
   log '**************************************************************************'
-  log "[*] e.g. --lts --reflector --dhcp --uefi --pwd i2a@@@"
+  log "[*] e.g. --lts --reflector --pwd i2a@@@"
   log "[*] DHCP: $dhcp  Reflector: ${reflector}"
   log "[*] MACH: $machine KERNEL: $kernel UEFI: ${uefi}"
   log "[*] V4: $ip4_addr $ip4_gw"
